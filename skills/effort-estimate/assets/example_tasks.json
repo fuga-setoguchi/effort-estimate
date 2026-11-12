@@ -1,0 +1,117 @@
+{
+  "title": "注文一覧にステータス絞り込みとCSV出力を追加",
+  "project_risk": "mid",
+  "skipped_phases": {},
+  "tasks": [
+    {
+      "id": "T1",
+      "name": "注文一覧まわりの既存実装と影響範囲の調査",
+      "type": "investigation",
+      "size": "M",
+      "uncertainty": "low",
+      "complexity": "mid",
+      "unfamiliarity": "none",
+      "reason": "一覧API・検索クエリ・フロントの3レイヤーにまたがるためM。OrderServiceに検索条件が分散しており複雑さmid",
+      "evidence": ["app/Http/Controllers/OrderController.php", "app/Services/OrderService.php", "resources/js/pages/orders/Index.tsx"]
+    },
+    {
+      "id": "T2",
+      "name": "絞り込み条件の仕様確認（複数選択可否など）",
+      "type": "client_qa",
+      "size": "S",
+      "uncertainty": "mid",
+      "complexity": "low",
+      "unfamiliarity": "none",
+      "reason": "確認事項2点のためS",
+      "evidence": []
+    },
+    {
+      "id": "T3",
+      "name": "一覧APIにステータス絞り込みを追加",
+      "type": "api_endpoint",
+      "size": "S",
+      "uncertainty": "mid",
+      "complexity": "mid",
+      "unfamiliarity": "none",
+      "reason": "既存の日付絞り込みと同じパターンで追加できるためS",
+      "evidence": ["app/Http/Requests/OrderIndexRequest.php", "app/Services/OrderService.php"]
+    },
+    {
+      "id": "T4",
+      "name": "一覧画面に絞り込みUIを追加",
+      "type": "screen_list",
+      "size": "S",
+      "uncertainty": "mid",
+      "complexity": "low",
+      "unfamiliarity": "none",
+      "reason": "既存の検索フォームに項目を1つ追加するのみ",
+      "evidence": ["resources/js/pages/orders/Index.tsx"]
+    },
+    {
+      "id": "T5",
+      "name": "CSV出力機能の追加",
+      "type": "file_io",
+      "size": "M",
+      "uncertainty": "mid",
+      "complexity": "low",
+      "unfamiliarity": "none",
+      "reason": "リポジトリ内に既存のCSV出力実装があり流用可能。出力項目の整形が必要なためM",
+      "evidence": ["app/Exports/CustomerExport.php"]
+    },
+    {
+      "id": "T6",
+      "name": "Featureテスト追加",
+      "type": "automated_test",
+      "size": "M",
+      "uncertainty": "low",
+      "complexity": "low",
+      "unfamiliarity": "none",
+      "reason": "絞り込みとCSVの両方にテストデータ準備が必要",
+      "evidence": ["tests/Feature/OrderIndexTest.php"]
+    },
+    {
+      "id": "T7",
+      "name": "手動での動作確認",
+      "type": "manual_test",
+      "size": "S",
+      "uncertainty": "low",
+      "complexity": "low",
+      "unfamiliarity": "none",
+      "reason": "",
+      "evidence": []
+    },
+    {
+      "id": "T8",
+      "name": "注文検索を使う他画面の回帰確認",
+      "type": "regression_test",
+      "size": "S",
+      "uncertainty": "low",
+      "complexity": "low",
+      "unfamiliarity": "none",
+      "reason": "OrderService::search は管理画面のダッシュボードからも呼ばれている",
+      "evidence": ["app/Http/Controllers/DashboardController.php"]
+    },
+    {
+      "id": "T9",
+      "name": "レビュー対応",
+      "type": "review_fix",
+      "size": "M",
+      "uncertainty": "low",
+      "complexity": "low",
+      "unfamiliarity": "none",
+      "reason": "実装規模が中程度のためM",
+      "evidence": []
+    },
+    {
+      "id": "T10",
+      "name": "リリース・本番確認",
+      "type": "release",
+      "size": "S",
+      "uncertainty": "low",
+      "complexity": "low",
+      "unfamiliarity": "none",
+      "reason": "マイグレーションなしの通常リリース",
+      "evidence": []
+    }
+  ]
+}
