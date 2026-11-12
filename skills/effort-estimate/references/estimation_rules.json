@@ -2,7 +2,7 @@
   "_note": "数値はすべて仮値（単位：時間）。過去実績に合わせて調整すること。値は rounding_step の倍数にし、S < M < L になるようにする。actual = AI支援ありの実作業時間、traditional = AI支援なしの従来基準（対外工数に使う）。",
   "version": "0.2.0",
   "hours_per_day": 8,
-  "rounding_step": 0.5,
+  "rounding_step": 0.25,
   "phases": {
     "investigation": "調査・設計",
     "implementation": "実装",
@@ -22,7 +22,7 @@
     "data_migration":    {"phase": "implementation", "label": "既存データの移行・補正",             "actual": {"S": 1, "M": 3, "L": 6},      "traditional": {"S": 2, "M": 5, "L": 10}},
     "screen_list":       {"phase": "implementation", "label": "画面（一覧・検索・詳細）",           "actual": {"S": 1, "M": 3, "L": 6},      "traditional": {"S": 2, "M": 6, "L": 12}},
     "screen_form":       {"phase": "implementation", "label": "画面（登録・編集フォーム）",         "actual": {"S": 1.5, "M": 3, "L": 6},    "traditional": {"S": 3, "M": 6, "L": 12}},
-    "ui_minor":          {"phase": "implementation", "label": "文言・軽微なUI修正",                 "actual": {"S": 0.5, "M": 1, "L": 1.5},  "traditional": {"S": 0.5, "M": 1.5, "L": 3}},
+    "ui_minor":          {"phase": "implementation", "label": "文言・軽微なUI修正",                 "actual": {"S": 0.25, "M": 0.5, "L": 1}, "traditional": {"S": 0.5, "M": 1, "L": 2}},
     "auth_permission":   {"phase": "implementation", "label": "権限・認可の変更",                   "actual": {"S": 1, "M": 2, "L": 4},      "traditional": {"S": 2, "M": 4, "L": 8}},
     "batch_job":         {"phase": "implementation", "label": "バッチ・ジョブ・スケジュール処理",   "actual": {"S": 1, "M": 3, "L": 6},      "traditional": {"S": 2, "M": 5, "L": 10}},
     "external_api":      {"phase": "implementation", "label": "外部API連携",                        "actual": {"S": 2, "M": 4, "L": 8},      "traditional": {"S": 3, "M": 6, "L": 12}},
@@ -33,7 +33,7 @@
     "regression_test":   {"phase": "test",           "label": "回帰確認（既存機能への影響確認）",   "actual": {"S": 0.5, "M": 1, "L": 2},    "traditional": {"S": 0.5, "M": 1.5, "L": 3}},
     "review_fix":        {"phase": "review",         "label": "レビュー対応・修正",                 "actual": {"S": 0.5, "M": 1, "L": 2},    "traditional": {"S": 0.5, "M": 1.5, "L": 3}},
     "release":           {"phase": "release",        "label": "リリース作業・本番確認",             "actual": {"S": 0.5, "M": 1, "L": 2},    "traditional": {"S": 0.5, "M": 1, "L": 2}},
-    "doc_update":        {"phase": "release",        "label": "ドキュメント・手順書の更新",         "actual": {"S": 0.5, "M": 1, "L": 1.5},  "traditional": {"S": 0.5, "M": 1.5, "L": 3}}
+    "doc_update":        {"phase": "release",        "label": "ドキュメント・手順書の更新",         "actual": {"S": 0.25, "M": 0.5, "L": 1}, "traditional": {"S": 0.5, "M": 1, "L": 2}}
   },
   "coefficients": {
     "uncertainty":   {"low": 1.0, "mid": 1.2,  "high": 1.5},

@@ -67,16 +67,16 @@ class ExampleTest(CalcTestCase):
         r = self.run_calc(EXAMPLE, "--json")
         self.assertEqual(r.returncode, 0, r.stderr)
         s = json.loads(r.stdout)
-        self.assertEqual(s["subtotal"], {"actual": 13.0, "traditional": 22.0})
-        self.assertEqual(s["buffer"], {"actual": 3.0, "traditional": 3.0})
-        self.assertEqual(s["total"], {"actual": 16.0, "traditional": 25.0})
+        self.assertEqual(s["subtotal"], {"actual": 12.25, "traditional": 21.75})
+        self.assertEqual(s["buffer"], {"actual": 2.5, "traditional": 2.5})
+        self.assertEqual(s["total"], {"actual": 14.75, "traditional": 24.25})
         self.assertEqual(s["warnings"], [])
 
     def test_example_custom(self):
         r = self.run_calc(EXAMPLE_CUSTOM, "--json")
         self.assertEqual(r.returncode, 0, r.stderr)
         s = json.loads(r.stdout)
-        self.assertEqual(s["total"], {"actual": 16.0, "traditional": 24.5})
+        self.assertEqual(s["total"], {"actual": 14.75, "traditional": 23.75})
         self.assertEqual(list(s["skipped_phases"]), ["release"])
         self.assertEqual(s["warnings"], [])
 
@@ -93,13 +93,24 @@ class ExampleTest(CalcTestCase):
         self.assertEqual(r.returncode, 0, r.stderr)
         for heading in ("### 工数サマリ", "### 工程別内訳", "### タスク明細", "### 分類の根拠"):
             self.assertIn(heading, r.stdout)
-        self.assertIn("| **合計** | **16h** | **25h** |", r.stdout)
+        self.assertIn("| **合計** | **14.75h** | **24.25h** |", r.stdout)
         self.assertNotIn("### 計算時の警告", r.stdout)
 
 
 class CalculationTest(CalcTestCase):
     def test_coefficient_and_rounding(self):
-        # api_endpoint S: 実作業 1h / 対外 2h。係数 1.2 * 1.15 = 1.38 → 0.5h 単位で切り上げ
+        # api_endpoint S: 実作業 1h / 対外 2h。0.25h 単位で切り上げる
+        # 係数 1.2 → 実作業 1.2h → 1.25h、対外 2.4h → 2.5h
+        s = self.summary({
+            "project_risk": "low", "skipped_phases": SKIP_ALL_BUT_IMPL,
+            "tasks": [task(uncertainty="mid")],
+        })
+        self.assertEqual(s["tasks"][0]["coefficient"], 1.2)
+        self.assertEqual(s["tasks"][0]["actual"], 1.25)
+        self.assertEqual(s["tasks"][0]["traditional"], 2.5)
+
+    def test_coefficients_are_multiplied(self):
+        # 係数 1.2 * 1.15 = 1.38 → 実作業 1.38h → 1.5h、対外 2.76h → 3h
         s = self.summary({
             "project_risk": "low", "skipped_phases": SKIP_ALL_BUT_IMPL,
             "tasks": [task(uncertainty="mid", complexity="mid")],
@@ -108,13 +119,23 @@ class CalculationTest(CalcTestCase):
         self.assertEqual(s["tasks"][0]["actual"], 1.5)
         self.assertEqual(s["tasks"][0]["traditional"], 3.0)
 
+    def test_quarter_hour_sizes_are_kept(self):
+        # 0.25h の基準値が丸めで消えず、S と M に差が出る
+        for wtype in ("ui_minor", "doc_update"):
+            with self.subTest(type=wtype):
+                s = self.summary({
+                    "project_risk": "low", "skipped_phases": SKIP_ALL_BUT_IMPL,
+                    "tasks": [task(id="S", type=wtype, size="S"), task(id="M", type=wtype, size="M")],
+                })
+                self.assertEqual([t["actual"] for t in s["tasks"]], [0.25, 0.5])
+
     def test_buffer_uses_actual_subtotal(self):
-        # 実作業小計 1h の 30% = 0.3h → 0.5h。対外にも同じ時間を載せる
+        # 実作業小計 1h の 10% = 0.1h → 0.25h。対外にも同じ時間を載せる
         s = self.summary({
-            "project_risk": "high", "skipped_phases": SKIP_ALL_BUT_IMPL, "tasks": [task()],
+            "project_risk": "low", "skipped_phases": SKIP_ALL_BUT_IMPL, "tasks": [task()],
         })
-        self.assertEqual(s["buffer"], {"actual": 0.5, "traditional": 0.5})
-        self.assertEqual(s["total"], {"actual": 1.5, "traditional": 2.5})
+        self.assertEqual(s["buffer"], {"actual": 0.25, "traditional": 0.25})
+        self.assertEqual(s["total"], {"actual": 1.25, "traditional": 2.25})
 
     def test_custom_pert(self):
         # (1 + 4*2 + 9) / 6 = 3h、対外は 1.8 倍 = 5.4h → 5.5h
@@ -169,7 +190,8 @@ class WarningTest(CalcTestCase):
 
     def test_flat_sizes(self):
         rules = json.loads(RULES.read_text(encoding="utf-8"))
-        rules["work_types"]["ui_minor"]["actual"] = {"S": 0.25, "M": 0.5, "L": 1}
+        # 0.25h の基準値を 0.5h 単位で丸めると、S と M が同じ時間になる
+        rules["rounding_step"] = 0.5
         rules_path = self.write("rules.json", rules)
         data = {"project_risk": "low", "skipped_phases": SKIP_ALL_BUT_IMPL,
                 "tasks": [task(type="ui_minor")]}
