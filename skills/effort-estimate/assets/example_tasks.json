@@ -77,7 +77,7 @@
       "uncertainty": "low",
       "complexity": "low",
       "unfamiliarity": "none",
-      "reason": "",
+      "reason": "確認するのは一覧画面の絞り込みとCSVダウンロードの2操作のためS",
       "evidence": []
     },
     {
@@ -110,7 +110,7 @@
       "uncertainty": "low",
       "complexity": "low",
       "unfamiliarity": "none",
-      "reason": "マイグレーションなしの通常リリース",
+      "reason": "マイグレーションなしの通常リリースのためS",
       "evidence": []
     }
   ]
