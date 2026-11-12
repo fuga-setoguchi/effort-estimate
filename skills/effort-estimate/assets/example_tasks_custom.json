@@ -45,11 +45,11 @@
       "id": "T4",
       "name": "過去の退会ユーザーへの初回一括実行",
       "type": "data_migration",
-      "size": "S",
+      "size": "M",
       "uncertainty": "low",
       "complexity": "low",
       "unfamiliarity": "none",
-      "reason": "T3 のバッチを対象期間を広げて1回実行するだけのためS。一度だけの作業なのでタスクとして計上",
+      "reason": "T3 のバッチを対象期間を広げて1回実行する。対象が3テーブルにまたがるためM。一度だけの作業なのでタスクとして計上",
       "evidence": []
     },
     {

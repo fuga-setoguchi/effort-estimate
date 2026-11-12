@@ -45,7 +45,7 @@
 | `uncertainty` | 必須 | 仕様の不確実性。`low` / `mid` / `high` |
 | `complexity` | 必須 | 既存コードの複雑さ。`low` / `mid` / `high` |
 | `unfamiliarity` | 必須 | 未経験の技術・領域。`none` / `partial` / `new` |
-| `reason` | 必須 | そのサイズ・係数にした理由。空だと calc.py が警告を出す |
+| `reason` | 必ず書く | そのサイズ・係数にした理由。空でも計算はできるが、calc.py が警告を出す |
 | `evidence` | 任意 | 調査で確認したファイルパスの配列 |
 
 ## 基準表の作業種別を使うタスク

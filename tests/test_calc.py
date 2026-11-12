@@ -76,7 +76,7 @@ class ExampleTest(CalcTestCase):
         r = self.run_calc(EXAMPLE_CUSTOM, "--json")
         self.assertEqual(r.returncode, 0, r.stderr)
         s = json.loads(r.stdout)
-        self.assertEqual(s["total"], {"actual": 14.75, "traditional": 23.75})
+        self.assertEqual(s["total"], {"actual": 17.25, "traditional": 27.25})
         self.assertEqual(list(s["skipped_phases"]), ["release"])
         self.assertEqual(s["warnings"], [])
 
