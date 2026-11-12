@@ -1,0 +1,89 @@
+{
+  "title": "退会ユーザーの個人情報を匿名化するバッチの追加",
+  "project_risk": "mid",
+  "skipped_phases": {
+    "release": "本番へのデプロイと本番確認は先方のインフラ担当が実施するため計上しない"
+  },
+  "tasks": [
+    {
+      "id": "T1",
+      "name": "退会処理と個人情報を持つテーブルの調査",
+      "type": "investigation",
+      "size": "M",
+      "uncertainty": "low",
+      "complexity": "mid",
+      "unfamiliarity": "none",
+      "reason": "個人情報が users・addresses・orders の3テーブルに分かれているためM。退会処理が複数のサービスに分散しており複雑さmid",
+      "evidence": ["app/Services/WithdrawalService.php", "app/Models/User.php", "database/migrations/2023_04_01_000000_create_addresses_table.php"]
+    },
+    {
+      "id": "T2",
+      "name": "匿名化対象の項目一覧（先方の法務確認用）の作成",
+      "type": "custom",
+      "phase": "investigation",
+      "optimistic": 1,
+      "likely": 2,
+      "pessimistic": 4,
+      "uncertainty": "mid",
+      "complexity": "low",
+      "unfamiliarity": "none",
+      "reason": "設計書ではなく先方の法務に渡す確認資料で、基準表に当てはまる種別がない。項目数は20前後で、差し戻しがあると悲観4h",
+      "evidence": []
+    },
+    {
+      "id": "T3",
+      "name": "匿名化バッチの追加（日次実行）",
+      "type": "batch_job",
+      "size": "M",
+      "uncertainty": "mid",
+      "complexity": "mid",
+      "unfamiliarity": "none",
+      "reason": "既存の日次バッチと同じ構成で作れるが、3テーブルを対象にする分岐が入るためM",
+      "evidence": ["app/Console/Commands/PurgeExpiredTokens.php", "app/Console/Kernel.php"]
+    },
+    {
+      "id": "T4",
+      "name": "過去の退会ユーザーへの初回一括実行",
+      "type": "data_migration",
+      "size": "S",
+      "uncertainty": "low",
+      "complexity": "low",
+      "unfamiliarity": "none",
+      "reason": "T3 のバッチを対象期間を広げて1回実行するだけのためS。一度だけの作業なのでタスクとして計上",
+      "evidence": []
+    },
+    {
+      "id": "T5",
+      "name": "バッチのテスト追加",
+      "type": "automated_test",
+      "size": "M",
+      "uncertainty": "low",
+      "complexity": "low",
+      "unfamiliarity": "none",
+      "reason": "退会済み・未退会・猶予期間中のテストデータ準備が必要なためM",
+      "evidence": ["tests/Feature/Console/PurgeExpiredTokensTest.php"]
+    },
+    {
+      "id": "T6",
+      "name": "検証環境での実行結果の確認",
+      "type": "manual_test",
+      "size": "S",
+      "uncertainty": "low",
+      "complexity": "low",
+      "unfamiliarity": "none",
+      "reason": "確認するのはバッチの実行と対象テーブルの値の2点のためS",
+      "evidence": []
+    },
+    {
+      "id": "T7",
+      "name": "レビュー対応",
+      "type": "review_fix",
+      "size": "S",
+      "uncertainty": "low",
+      "complexity": "low",
+      "unfamiliarity": "none",
+      "reason": "実装はバッチ1本で小規模のためS",
+      "evidence": []
+    }
+  ]
+}
