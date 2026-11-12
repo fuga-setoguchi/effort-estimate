@@ -1,8 +1,10 @@
 {
   "name": "effort-estimate",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "リポジトリを調査し、改修・機能追加の工数を基準表とスクリプトで標準化して算出する Claude スキル",
   "author": { "name": "Fuga Setoguchi" },
+  "homepage": "https://github.com/fuga-setoguchi/effort-estimate",
+  "repository": "https://github.com/fuga-setoguchi/effort-estimate",
   "license": "MIT",
   "keywords": ["estimation", "工数見積もり", "skill"]
 }

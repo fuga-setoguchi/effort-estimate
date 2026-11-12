@@ -1,5 +1,6 @@
 {
   "name": "effort-estimate",
+  "description": "既存リポジトリの改修・機能追加の工数を、基準表とスクリプトで算出する Claude スキル",
   "owner": { "name": "Fuga Setoguchi" },
   "plugins": [
     {

@@ -1,8 +1,8 @@
 {
-  "_note": "数値はすべて仮値（単位：時間）。過去実績に合わせて調整すること。actual = AI支援ありの実作業時間、traditional = AI支援なしの従来基準（対外工数に使う）。",
-  "version": "0.1.0",
+  "_note": "数値はすべて仮値（単位：時間）。過去実績に合わせて調整すること。値は rounding_step の倍数にし、S < M < L になるようにする。actual = AI支援ありの実作業時間、traditional = AI支援なしの従来基準（対外工数に使う）。",
+  "version": "0.2.0",
   "hours_per_day": 8,
-  "rounding_step": 0.5,
+  "rounding_step": 0.25,
   "phases": {
     "investigation": "調査・設計",
     "implementation": "実装",

@@ -1,0 +1,26 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+    # ランナーの OS に入っている Python ではなく、公式の Python イメージで実行する。
+    # 古いバージョン（3.8）はランナーの OS 向けに提供されなくなるため。
+    container: python:${{ matrix.python-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show versions
+        run: python --version && git --version
+      - name: Run tests
+        run: python -m unittest discover tests -v
